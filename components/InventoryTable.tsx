@@ -63,6 +63,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
         <TableBody>
           {filteredPlants?.map((plant) => (
             <TableRow key={plant.id}>
+              <TableCell>{plant.id}</TableCell>
               <TableCell>{plant.name}</TableCell>
               <TableCell>{plant.category}</TableCell>
               <TableCell>{plant.price}</TableCell>
