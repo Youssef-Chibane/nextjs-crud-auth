@@ -8,35 +8,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Combobox } from "./ui/ComboBox";
 import { useState } from "react";
+import { getPlants } from "@/app/actions/plants-action";
 
-const plants = [
-  {
-    id: "dqdqsl554",
-    name: "Snake Plant",
-    category: "Indoor",
-    price: 2,
-    stock: 10,
-  },
-];
+type Plants = Awaited<ReturnType<typeof getPlants>>;
 
-export default function InventoryTable() {
-  const [selectCategory, setSelectCategory] = useState("");
+interface InventoryTableProps {
+  plants: Plants;
+}
+
+export default function InventoryTable({ plants }: InventoryTableProps) {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter plants by name and category (if selected)
+  const filteredPlants = plants?.userPlants?.filter(
+    (plant) =>
+      plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory === "" || plant.category === selectedCategory)
+  );
 
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
         <div className="relative max-w-sm w-full">
-          <Input placeholder="Filter plants..." className="pl-10" />
+          <Input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Filter plants..."
+            className="pl-10"
+          />
           <Search className="absolute h-4 w-4 left-3 top-1/2 transform -translate-y-1/2" />
         </div>
         <Combobox
-          value={selectCategory}
-          onChange={(val) => setSelectCategory(val)}
+          value={selectedCategory}
+          onChange={(val) => setSelectedCategory(val)}
         />
       </div>
 
@@ -52,7 +61,7 @@ export default function InventoryTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {plants.map((plant) => (
+          {filteredPlants?.map((plant) => (
             <TableRow key={plant.id}>
               <TableCell>{plant.name}</TableCell>
               <TableCell>{plant.category}</TableCell>
