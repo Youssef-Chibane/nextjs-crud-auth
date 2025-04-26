@@ -3,23 +3,23 @@ import PlantCard from "./PlantCard";
 import { stackServerApp } from "@/stack";
 import { SignIn } from "@stackframe/stack";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  // Extract the id from the slug by splitting on the delimiter
-  const [id] = params.slug.split("--");
+type Params = Promise<{ slug: string }>;
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const { slug } = await params;
+  const [id] = slug.split("--");
   const plant = await getPlantById(id);
+
   return {
-    title: plant ? plant.name : "Plant Details",
-    description: plant ? plant.description : "Plant details page",
+    title: plant?.name ?? "Plant Details",
+    description: plant?.description ?? "Plant details page",
   };
 }
 
-async function PlantPage({ params }: { params: { slug: string } }) {
+export default async function PlantPage({ params }: { params: Params }) {
+  const { slug } = await params;
+  const [id] = slug.split("--");
   const user = await stackServerApp.getUser();
-  const [id] = params.slug.split("--");
   const plant = await getPlantById(id);
 
   if (!user) {
@@ -34,5 +34,3 @@ async function PlantPage({ params }: { params: { slug: string } }) {
     </div>
   );
 }
-
-export default PlantPage;
