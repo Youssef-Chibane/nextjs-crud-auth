@@ -14,6 +14,7 @@ import { Combobox } from "./ui/ComboBox";
 import { useState } from "react";
 import { getPlants } from "@/app/actions/plants-action";
 import { useRouter } from "next/navigation";
+import TableSkeleton from "./TableSkeleton";
 
 type Plants = Awaited<ReturnType<typeof getPlants>>;
 
@@ -33,6 +34,8 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
       (selectedCategory === "" || plant.category === selectedCategory)
   );
 
+  if (!plants) <TableSkeleton />;
+
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
@@ -49,6 +52,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
           value={selectedCategory}
           onChange={(val) => setSelectedCategory(val)}
         />
+        <h1>Create Button</h1>
       </div>
 
       <Table>
