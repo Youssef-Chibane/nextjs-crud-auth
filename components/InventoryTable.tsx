@@ -15,6 +15,7 @@ import { useState } from "react";
 import { getPlants } from "@/app/actions/plants-action";
 import { useRouter } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
+import CreateDialog from "./CreateDialog";
 
 type Plants = Awaited<ReturnType<typeof getPlants>>;
 
@@ -52,7 +53,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
           value={selectedCategory}
           onChange={(val) => setSelectedCategory(val)}
         />
-        <h1>Create Button</h1>
+        <CreateDialog />
       </div>
 
       <Table>
