@@ -14,8 +14,9 @@ import { Combobox } from "./ui/ComboBox";
 import { useState } from "react";
 import { getPlants } from "@/app/actions/plants-action";
 import { useRouter } from "next/navigation";
-import TableSkeleton from "./TableSkeleton";
 import CreateDialog from "./CreateDialog";
+import EditDialog from "./EditDialog";
+import DeleteDialog from "./DeleteDialog";
 
 type Plants = Awaited<ReturnType<typeof getPlants>>;
 
@@ -34,8 +35,6 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === "" || plant.category === selectedCategory)
   );
-
-  if (!plants) <TableSkeleton />;
 
   return (
     <div className="w-full">
@@ -81,10 +80,13 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
                 <TableCell>{plant.price}</TableCell>
                 <TableCell className="font-bold">{plant.stock}</TableCell>
 
-                <TableCell className="text-right">
-                  <div className="flex justify-end space-x-4">
-                    <h1>Edit Button</h1>
-                    <h1>Delete Button</h1>
+                <TableCell className="flex justify-end items-center text-right">
+                  <div
+                    className="flex gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditDialog plant={plant} />
+                    <DeleteDialog plant={plant} />
                   </div>
                 </TableCell>
               </TableRow>
